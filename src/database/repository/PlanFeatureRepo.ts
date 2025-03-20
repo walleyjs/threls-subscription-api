@@ -6,8 +6,8 @@ async function findPlanFeatureById(id: Types.ObjectId): Promise<PlanFeature | nu
   return PlanFeatureModel.findById(id).lean().exec();
 }
 
-async function findPlanFeatureByPlanId(planId: Types.ObjectId): Promise<PlanFeature[]> {
-  const plan= await PlanFeatureModel.find({ planId })
+async function findPlanFeature(where:any): Promise<PlanFeature[]> {
+  const plan= await PlanFeatureModel.find( where )
     .populate({
       path: 'featureId',
     })
@@ -19,5 +19,5 @@ async function findPlanFeatureByPlanId(planId: Types.ObjectId): Promise<PlanFeat
 
 export default {
   findPlanFeatureById,
-  findPlanFeatureByPlanId
+  findPlanFeature
 }
