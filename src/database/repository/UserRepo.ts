@@ -14,11 +14,6 @@ async function findPrivateProfileById(
 ): Promise<User | null> {
   return UserModel.findOne({ _id: id, status: true })
     .select('+email')
-    .populate({
-      path: 'roles',
-      match: { status: true },
-      select: { code: 1 },
-    })
     .lean<User>()
     .exec();
 }

@@ -5,6 +5,7 @@ import logout from './access/logout';
 import token from './access/token';
 import credential from './access/credential';
 import profile from './profile';
+import plan from './plan'
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/logout', logout);
 router.use('/token', token);
 router.use('/credential', credential);
 router.use('/profile', profile);
+router.use('/plan', plan);
 
 export default router;

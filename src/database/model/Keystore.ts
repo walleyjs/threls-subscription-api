@@ -1,8 +1,8 @@
 import { Schema, model, Types } from 'mongoose';
 import User from './User';
 
-export const DOCUMENT_NAME = 'Keystore';
-export const COLLECTION_NAME = 'keystores';
+const DOCUMENT_NAME = 'Keystore';
+const COLLECTION_NAME = 'keystores';
 
 export default interface Keystore {
   _id: Types.ObjectId;

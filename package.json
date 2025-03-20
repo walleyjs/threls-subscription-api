@@ -2,7 +2,7 @@
   "name": "threls-subscription-service-api",
   "version": "1.0.0",
   "main": "index.js",
- "scripts": {
+  "scripts": {
     "start": "npm run build && npm run serve",
     "serve": "node -r dotenv/config build/server.js",
     "build": "npm run clean && npm run build-ts",
@@ -16,7 +16,10 @@
     "eslint": "eslint . --ext .js,.ts",
     "upgrade": "npm update --save-dev && npm update --save",
     "upgrade-latest": "npx npm-check-updates -u && npm install",
-    "test": "jest --forceExit --detectOpenHandles --coverage --verbose"
+    "test": "jest --forceExit --detectOpenHandles --coverage --verbose",
+    "seed": "ts-node -r dotenv/config src/database/seeders/index.ts",
+    "seed:features": "ts-node -r dotenv/config src/database/seeders/feature.seeder.ts",
+    "seed:plans": "ts-node -r dotenv/config src/database/seeders/plan.seeder.ts"
   },
   "author": "Bashir",
   "license": "Apache-2.0",
@@ -67,8 +70,15 @@
     "typescript": "^5.3.3"
   },
   "nodemonConfig": {
-    "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
-    "watch": ["build"],
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "build"
+    ],
     "ext": "js",
     "delay": "1000",
     "polling": true,
