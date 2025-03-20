@@ -13,19 +13,6 @@
 
 ## How to build and run this project
 
-* Install using Docker Compose [**Recommended Method**] 
-    * Clone this repo.
-    * Make a copy of **.env.example** file to **.env**.
-    * Make a copy of **keys/private.pem.example** file to **keys/private.pem**.
-    * Make a copy of **keys/public.pem.example** file to **keys/public.pem**.
-    * Make a copy of **tests/.env.test.example** file to **tests/.env.test**.
-    * Install Docker and Docker Compose. [Find Instructions Here](https://docs.docker.com/install/).
-    * Execute `docker-compose up -d` in terminal from the repo directory.
-    * You will be able to access the api from http://localhost:3000
-    * Run Tests: `docker exec -t app npm test`
-    * *If having any issue* then make sure 3000 port is not occupied else provide a different port in **.env** file.
-    * *If having any issue* then make sure 27017 port is not occupied else provide a different port in **.env** file.
-
  * Installation flow
     * Make a copy of **.env.example** file to **.env**.
     * Make a copy of **keys/private.pem.example** file to **keys/private.pem**.
