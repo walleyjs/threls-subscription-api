@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "watch": ["src/"],
+  "ext": "ts,js,json",
+  "ignore": [".git", "node_modules", "build", "**/*.test.ts", "tests"],
+  "exec": "ts-node -r dotenv/config src/server.ts",
+  "legacyWatch": true,
+  "polling": true
+}
