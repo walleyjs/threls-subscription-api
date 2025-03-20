@@ -14,13 +14,14 @@
 ## How to build and run this project
 
  * Installation flow
+    * Install MongoDB on your local.
+    * Install node.js and npm on your local machine.
+    * From the root of the project executes in terminal `npm install`.
+    * Use the latest version of node on the local machine if the build fails.
     * Make a copy of **.env.example** file to **.env**.
     * Make a copy of **keys/private.pem.example** file to **keys/private.pem**.
     * Make a copy of **keys/public.pem.example** file to **keys/public.pem**.
     * Make a copy of **tests/.env.test.example** file to **tests/.env.test**.
-    * Do steps 1 to 5 as listed for **Install using Docker Compose**.
-    * Do steps 1 to 3 as listed for **Run The Tests**.
-    * Create users in MongoDB and seed the data taking reference from the **addons/init-mongo.js**
     * Change the `DB_HOST` to `localhost` in **.env** and **tests/.env.test** files.
     * Execute `npm dev` and You will be able to access the API from http://localhost:3000
     * To run the tests execute `npm test`.
