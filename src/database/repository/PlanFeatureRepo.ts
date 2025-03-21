@@ -1,5 +1,4 @@
 import PlanFeature, { PlanFeatureModel}  from "../model/PlanFeature";
-import FeatureRepo from "./FeatureRepo";
 import { Types } from "mongoose";
 
 async function findPlanFeatureById(id: Types.ObjectId): Promise<PlanFeature | null> {

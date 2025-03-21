@@ -5,6 +5,7 @@ const DOCUMENT_NAME = 'PlanFeature';
 const COLLECTION_NAME = 'planFeatures';
 
 export default interface PlanFeature  {
+  _id:Types.ObjectId;
   planId: Plan;
   featureId: Feature;
   isEnabled: boolean;

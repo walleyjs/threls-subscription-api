@@ -4,6 +4,7 @@ import login from './access/login';
 import logout from './access/logout';
 import token from './access/token';
 import credential from './access/credential';
+import paymethod from './subcription/paymentMethod'
 import profile from './profile';
 import plan from './plan'
 
@@ -24,5 +25,6 @@ router.use('/token', token);
 router.use('/credential', credential);
 router.use('/profile', profile);
 router.use('/plan', plan);
+router.use('/subscription/payment-method', paymethod);
 
 export default router;

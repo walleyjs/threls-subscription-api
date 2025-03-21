@@ -9,7 +9,6 @@ import validator from '../../helpers/validator';
 import asyncHandler from '../../helpers/asyncHandler';
 import _, { values } from 'lodash';
 import authentication from '../../auth/authentication';
-import PlanFeature from '../../database/model/PlanFeature';
 
 const router = express.Router();
 
