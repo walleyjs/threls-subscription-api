@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import PaymentMethod, { PaymentMethodModel } from '../model/PaymentMethod';
 
 async function createPaymentMethod(
@@ -8,8 +7,13 @@ async function createPaymentMethod(
 }
 
 async function findOnePaymentMethod(where: any): Promise<PaymentMethod | null> {
-  return PaymentMethodModel.findOne(where);
+  return PaymentMethodModel.findOne(where).sort({ createdAt: -1 }).lean().exec();
 }
+
+async function findAllPaymentMethods(where: any): Promise<PaymentMethod[] | [] | null> {
+  return PaymentMethodModel.find(where).sort({ isDefault: -1, createdAt: -1 }).lean().exec();
+}
+
 
 async function updatePaymentMethod(
  where:any, set:any
@@ -23,8 +27,10 @@ async function updatePaymentMethod(
   return true;
 }
 
+
 export default {
   createPaymentMethod,
   findOnePaymentMethod,
   updatePaymentMethod,
+  findAllPaymentMethods
 };

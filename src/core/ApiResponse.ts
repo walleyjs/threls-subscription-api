@@ -92,7 +92,7 @@ export class SuccessMsgResponse extends ApiResponse {
 
 export class FailureMsgResponse extends ApiResponse {
   constructor(message: string) {
-    super(StatusCode.FAILURE, ResponseStatus.SUCCESS, message);
+    super(StatusCode.FAILURE, ResponseStatus.INTERNAL_ERROR, message);
   }
 }
 

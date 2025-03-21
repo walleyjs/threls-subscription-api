@@ -39,4 +39,9 @@ export default {
     isDefault: Joi.boolean(),
     metadata: Joi.object().pattern(Joi.string(), Joi.any()).default({}), 
   }),
+
+  subscriptionCreate: Joi.object().keys({
+    planId: Joi.string().required(),
+    paymentMethodId: Joi.string().required(),
+  }),
 }

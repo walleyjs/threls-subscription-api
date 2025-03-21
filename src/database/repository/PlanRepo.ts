@@ -1,7 +1,7 @@
 import Plan, {PlanModel} from "../model/Plan";
 import { Types } from "mongoose";
 
-async function findPlanId(id: Types.ObjectId): Promise<Plan | null> {
+async function findPlanById(id: Types.ObjectId): Promise<Plan | null> {
   return PlanModel.findById(id).lean().exec();
 }
 
@@ -10,6 +10,6 @@ async function findAllPlans():Promise<Plan[]>{
 }
 
 export default {
-  findPlanId,
+  findPlanById,
   findAllPlans
 }

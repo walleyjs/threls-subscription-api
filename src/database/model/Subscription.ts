@@ -1,14 +1,15 @@
 import { model, Schema, Types } from 'mongoose';
 import User from './User';
 import Plan from './Plan';
+import Transaction from './Transaction';
 const DOCUMENT_NAME = 'Subscription';
 const COLLECTION_NAME = 'subscriptions';
 
 export default interface Subscription {
   _id: Types.ObjectId;
-  userId: User;
+  userId: User | Types.ObjectId;
   planId: Plan;
-  status: "active" | "canceled" | "expired" | "trial";
+  status: "active" | "canceled" | "expired" | "trial" | "pending";
   startDate: Date;
   currentPeriodStart: Date;
   currentPeriodEnd: Date;       
@@ -16,6 +17,7 @@ export default interface Subscription {
   cancelAtPeriodEnd: boolean;  
   paymentMethodId: string;
   lastBillingAttempt: Date | null;
+  lastTransactionId:Transaction;
   failedAttempts: number;      
   metadata: Record<string, any>;
 }
@@ -35,7 +37,8 @@ const schema = new Schema<Subscription>(
     status: {
       type: Schema.Types.String,
       required: true,
-      enum: ["active", "canceled", "expired", "trial"],
+      default: "pending",
+      enum: ["active", "canceled", "expired", "trial", "pending"],
     },
     startDate: {
       type: Schema.Types.Date,
@@ -55,7 +58,7 @@ const schema = new Schema<Subscription>(
     },
     cancelAtPeriodEnd: {
       type: Schema.Types.Boolean,
-      required: true,
+      required: false,
     },
     paymentMethodId: {
       type: Schema.Types.String,
@@ -65,9 +68,15 @@ const schema = new Schema<Subscription>(
       type: Schema.Types.Date,
       required: false,
     },
+    lastTransactionId:{
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'Transaction',
+    },
     failedAttempts: {
       type: Schema.Types.Number,
-      required: true,
+      default: 0,
+      required: false,
     },
     metadata: {
       type: Schema.Types.Mixed,

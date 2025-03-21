@@ -22,8 +22,10 @@ const COLLECTION_NAME = 'transactions';
     expiryMonth: number;
     expiryYear: number;
   };
-  invoiceNumber: string;      
+  invoiceNumber: string; 
+  providerTransactionId:string;     
   billingPeriodStart: Date;
+  failureReason:string;
   billingPeriodEnd: Date;
   metadata: Record<string, any>;
 }
@@ -57,7 +59,8 @@ const schema = new Schema<Transaction>(
     },
     status:{
       type: Schema.Types.String,
-      required: true,
+      required: false,
+      default:"pending",
       enum: ["pending", "succeeded", "failed", "refunded"],
     },
     paymentMethodId:{
@@ -68,16 +71,16 @@ const schema = new Schema<Transaction>(
     paymentMethodDetails: {
       type: {
         type: String,
-        required: true,
+        required: false,
       },
       last4: {
         type: String,
-        required: true,
+        required: false,
         maxlength: 4,
       },
       expiryMonth: {
         type: Number,
-        required: true,
+        required: false,
         min: 1,
         max: 12,
       },
@@ -88,11 +91,21 @@ const schema = new Schema<Transaction>(
     },
     invoiceNumber: {
       type: String,
-      required: true,
+      required: false,
+    },
+   failureReason: {
+      type: String,
+      required: false,
+      default:null
     },
     billingPeriodStart: {
       type: Schema.Types.Date,
       required: true,
+    },
+    providerTransactionId:{
+      type: String,
+      required: false,
+      default:null
     },
     billingPeriodEnd: {
       type: Schema.Types.Date,
