@@ -140,7 +140,7 @@ router.post(
 
 router.post(
   '/:subscriptionId/retry',
-  validator(schema.subscriptionCreate),
+  validator(schema.subscriptionRetry),
   asyncHandler(async (req: ProtectedRequest, res) => {
     const { paymentMethodId } = req.body;
     const { _id: userId } = req.user;
@@ -231,5 +231,46 @@ router.post(
   }),
 );
 
-export default router;
+router.post(
+  '/:subscriptionId/cancel',
+  asyncHandler(async (req: ProtectedRequest, res) => {
+    const { immediate } = req.body;
+    const { _id: userId } = req.user;
+    const { subscriptionId } = req.params;
 
+    const subscription = await SubscriptionRepo.findOneSubscription({
+      userId,
+      _id: subscriptionId,
+    });
+    if (!subscription) throw new NotFoundError('Subscription not found');
+
+    if (subscription.status === 'canceled') {
+      throw new BadRequestError('Subscription is already canceled');
+    }
+
+    if (immediate) {
+      subscription.status = 'canceled';
+      subscription.canceledAt = new Date();
+    } else {
+      subscription.cancelAtPeriodEnd = true;
+    }
+
+    await SubscriptionRepo.updateSubscription(
+      { _id: subscription._id },
+      {
+        $set: {
+          status: subscription.status,
+          canceledAt: subscription.canceledAt,
+          cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+        },
+      },
+    );
+
+    const updatedSubscription = await SubscriptionRepo.findOneSubscription({
+      _id: subscription._id,
+    });
+    new SuccessResponse('Subscription created', updatedSubscription).send(res);
+  }),
+);
+
+export default router;

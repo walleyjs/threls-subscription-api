@@ -17,7 +17,18 @@ async function updateSubscription(where: any, set: any): Promise<boolean> {
 async function findAllSubscriptions(
   where: any,
 ): Promise<Subscription[] | null> {
-  return SubscriptionModel.find(where).sort({ createdAt: -1 }).lean().exec();
+  return SubscriptionModel.find(where)
+    .populate([
+      {
+        path: 'userId',
+      },
+      {
+        path: 'planId',
+      },
+    ])
+    .sort({ createdAt: -1 })
+    .lean()
+    .exec();
 }
 
 export default {

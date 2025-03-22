@@ -9,7 +9,7 @@ export default interface Subscription {
   _id: Types.ObjectId;
   userId: User | Types.ObjectId;
   planId: Plan;
-  status: "active" | "canceled" | "expired" | "trial" | "pending";
+  status: "active" | "canceled" | "expired" | "trial" | "pending" | "past_due";
   startDate: Date;
   currentPeriodStart: Date;
   currentPeriodEnd: Date;       
@@ -38,7 +38,7 @@ const schema = new Schema<Subscription>(
       type: Schema.Types.String,
       required: true,
       default: "pending",
-      enum: ["active", "canceled", "expired", "trial", "pending"],
+      enum: ["active", "canceled", "expired", "trial", "pending", "past_due"],
     },
     startDate: {
       type: Schema.Types.Date,

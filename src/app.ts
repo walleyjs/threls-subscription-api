@@ -12,6 +12,7 @@ import {
   ErrorType,
 } from './core/ApiError';
 import routes from './routes';
+import { initScheduler } from './config/scheduler';
 
 process.on('uncaughtException', (e) => {
   Logger.error(e);
@@ -25,6 +26,8 @@ app.use(
 app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 models.verifyModelRegistration()
+
+initScheduler();
 
 // Routes
 app.use('/api/v1', routes);

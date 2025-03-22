@@ -44,4 +44,10 @@ export default {
     planId: Joi.string().required(),
     paymentMethodId: Joi.string().required(),
   }),
+  subscriptionRetry: Joi.object().keys({
+    paymentMethodId: Joi.string().required(),
+  }),
+  subscriptionCancel: Joi.object().keys({
+    immediate: Joi.boolean().required(),
+  }),
 }
