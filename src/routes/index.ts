@@ -27,6 +27,6 @@ router.use('/credential', credential);
 router.use('/profile', profile);
 router.use('/plan', plan);
 router.use('/subscription', subscription);
-router.use('/subscription/payment-method', paymethod);
+router.use('/payment-method', paymethod);
 
 export default router;

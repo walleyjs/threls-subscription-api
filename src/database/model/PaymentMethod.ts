@@ -14,6 +14,7 @@ export default interface PaymentMethod {
     last4: string;
     expiryMonth: number;
     expiryYear: number;
+    cardholderName: string;
   };
   billingAddress: {
     line1: string;
@@ -23,6 +24,7 @@ export default interface PaymentMethod {
     postalCode: string;
     country: string;
   };
+  
   metadata: Record<string, any>;
 }
 
@@ -60,6 +62,10 @@ const schema = new Schema<PaymentMethod>(
         type: Schema.Types.Number,
          trim: true,
       },
+      cardholderName:{
+        type: Schema.Types.String,
+         trim: true,
+      }
     },
     billingAddress:{
       line1:{

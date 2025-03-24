@@ -5,7 +5,7 @@ export const COLLECTION_NAME = 'users';
 
 export enum RoleCode {
   CUSTOMER = 'CUSTOMER',
-  SUPER_ADMIN = 'ESUPER_ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
   ADMIN = 'ADMIN',
 }
 

@@ -1,7 +1,9 @@
 import Subscription, { SubscriptionModel } from '../model/Subscription';
 
 async function findOneSubscription(where: any): Promise<Subscription | null> {
-  return SubscriptionModel.findOne(where).lean().exec();
+  return SubscriptionModel.findOne(where).populate([{
+    path:"planId"
+  }]).lean().exec();
 }
 
 async function createSubscription(params: any): Promise<Subscription> {

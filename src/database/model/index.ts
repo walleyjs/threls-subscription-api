@@ -6,6 +6,7 @@ export * from './Keystore';
 export * from './Subscription';
 export * from './Transaction';
 export *  from './PaymentMethod';
+export * from './Webhook';
 
 import mongoose from 'mongoose';
 export function verifyModelRegistration() {

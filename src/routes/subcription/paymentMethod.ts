@@ -40,6 +40,8 @@ router.post(
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth() + 1;
 
+      details.last4= details.cardNumber.slice(-4);
+
       if (
         details.expiryYear < currentYear ||
         (details.expiryYear === currentYear &&
@@ -65,7 +67,7 @@ router.post(
   }),
 );
 
-router.post(
+router.put(
   '/update/:id',
   validator(schema.paymentMethodUpdate),
   asyncHandler(async (req: ProtectedRequest, res) => {

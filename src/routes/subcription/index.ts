@@ -11,10 +11,9 @@ import Logger from '../../core/Logger';
 import { BadRequestError, NotFoundError } from '../../core/ApiError';
 import PlanRepo from '../../database/repository/PlanRepo';
 import PaymentMethodRepo from '../../database/repository/PaymentMethodRepo';
-import TransactionRepo from '../../database/repository/TransactionRepo';
 import { createTransaction } from '../../services/paymentService';
-import { stat } from 'fs';
 import { Types } from 'mongoose';
+import { dispatchWebhookEvent } from '../../services/webhookService';
 
 const router = express.Router();
 router.use(authentication);
@@ -29,6 +28,22 @@ router.get(
 
     new SuccessResponse('success', {
       data: subscriptions,
+    }).send(res);
+  }),
+);
+
+router.get(
+  '/current',
+  asyncHandler(async (req: ProtectedRequest, res) => {
+    const { _id: userId } = req.user;
+    const subscription = await SubscriptionRepo.findOneSubscription({
+      userId,
+      status: { $in: ["active", "trial", "pending", "past_due"] },
+     
+    });
+
+    new SuccessResponse('success', {
+      data: subscription,
     }).send(res);
   }),
 );
@@ -133,7 +148,15 @@ router.post(
     const updatedSubscription = await SubscriptionRepo.findOneSubscription({
       _id: subscription._id,
     });
-
+    if (updatedSubscription) {
+      await dispatchWebhookEvent(userId.toString(), 'subscription.created', {
+        id: updatedSubscription._id,
+        status: subscription.status,
+        planId: subscription.planId._id,
+        startDate: subscription.startDate,
+        currentPeriodEnd: subscription.currentPeriodEnd,
+      });
+    }
     new SuccessResponse('Subscription created', updatedSubscription).send(res);
   }),
 );
@@ -164,7 +187,7 @@ router.post(
     }
 
     const plan = await PlanRepo.findPlanById(
-      new Types.ObjectId(subscription.planId.toString()),
+      new Types.ObjectId(subscription.planId._id.toString()),
     );
 
     if (!plan || !plan.isActive)
@@ -184,7 +207,7 @@ router.post(
     const transaction = await createTransaction({
       subscriptionId: subscription._id,
       userId,
-      planId: new Types.ObjectId(subscription.planId.toString()),
+      planId: new Types.ObjectId(subscription.planId._id.toString()),
       amount: plan.price,
       currency: plan.currency,
       paymentMethodId: methodToUse,
@@ -234,7 +257,7 @@ router.post(
 router.post(
   '/:subscriptionId/cancel',
   asyncHandler(async (req: ProtectedRequest, res) => {
-    const { immediate } = req.body;
+    const { immediate=true } = req.body;
     const { _id: userId } = req.user;
     const { subscriptionId } = req.params;
 
