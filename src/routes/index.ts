@@ -7,7 +7,8 @@ import credential from './access/credential';
 import paymethod from './subcription/paymentMethod';
 import subscription from './subcription'
 import profile from './profile';
-import plan from './plan'
+import plan from './plan';
+import Transaction from './subcription/transaction'
 
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.use('/profile', profile);
 router.use('/plan', plan);
 router.use('/subscription', subscription);
 router.use('/payment-method', paymethod);
+router.use('/transaction', Transaction);
 
 export default router;

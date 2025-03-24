@@ -134,6 +134,29 @@ router.put(
   }),
 );
 
+router.put(
+  '/delete/:id',
+  
+  asyncHandler(async (req: ProtectedRequest, res) => {
+   
+    const { _id: userId } = req.user;
+    const { id } = req.params;
+
+    const paymentMethod = await PaymentMethodRepo.findOnePaymentMethod({
+      _id: id,
+      userId,
+    });
+
+    if (!paymentMethod) throw new BadRequestError('Payment method not found');
+
+   const deleted = await PaymentMethodRepo.deletePaymentMethod(id);
+
+    new SuccessResponse('success', {
+      data: deleted,
+    }).send(res);
+  }),
+);
+
 router.get(
   '/default',
   asyncHandler(async (req: ProtectedRequest, res) => {
