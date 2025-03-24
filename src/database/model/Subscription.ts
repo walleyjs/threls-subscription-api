@@ -2,6 +2,7 @@ import { model, Schema, Types } from 'mongoose';
 import User from './User';
 import Plan from './Plan';
 import Transaction from './Transaction';
+import { string } from 'joi';
 const DOCUMENT_NAME = 'Subscription';
 const COLLECTION_NAME = 'subscriptions';
 
@@ -15,6 +16,7 @@ export default interface Subscription {
   currentPeriodEnd: Date;       
   canceledAt: Date | null;
   cancelAtPeriodEnd: boolean;  
+  cancelReason:string;
   paymentMethodId: string;
   lastBillingAttempt: Date | null;
   lastTransactionId:Transaction;
@@ -55,6 +57,11 @@ const schema = new Schema<Subscription>(
     canceledAt: {
       type: Schema.Types.Date,
       required: false,
+    },
+    cancelReason:{
+      type:Schema.Types.String,
+      required:false
+
     },
     cancelAtPeriodEnd: {
       type: Schema.Types.Boolean,

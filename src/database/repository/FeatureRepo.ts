@@ -38,6 +38,10 @@ async function deleteFeature(id: Types.ObjectId): Promise<Feature | null> {
   ).lean().exec();
 }
 
+async function findFeatures(where:any): Promise<Feature[]> {
+  return FeatureModel.find(where).lean().exec();
+}
+
 export default {
   findFeatureById,
   findFeatureByKey,
@@ -45,4 +49,5 @@ export default {
   createFeature,
   updateFeature,
   deleteFeature,
+  findFeatures
 };

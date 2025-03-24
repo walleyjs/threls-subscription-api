@@ -25,7 +25,7 @@ async function sendWebhook(webhook: any, eventType: WebhookEventType, payload: a
   try {
     const timestamp = Math.floor(Date.now() / 1000);
     
-    // Create the full webhook payload
+  
     const webhookPayload = {
       id: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
       created: timestamp,
@@ -91,7 +91,7 @@ export async function dispatchWebhookEvent(
     const webhooks = await WebhookRepo.findAllWebhooks({
       userId,
       isActive: true,
-      events: eventType
+      events: { $in: [eventType] }
     });
 
     if(!webhooks) {

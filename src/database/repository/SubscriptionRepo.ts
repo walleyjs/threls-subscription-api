@@ -33,9 +33,50 @@ async function findAllSubscriptions(
     .exec();
 }
 
+
+
+async function getSubscribersByPlan(): Promise<any> {
+  return SubscriptionModel.aggregate([
+    {
+      $match: { status: 'active' }
+    },
+    {
+      $group: {
+        _id: '$planId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $lookup: {
+        from: 'plans',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'planDetails'
+      }
+    },
+    {
+      $unwind: '$planDetails'
+    },
+    {
+      $project: {
+        planName: '$planDetails.name',
+        count: 1,
+        _id: 0
+      }
+    }
+  ]);
+  
+}
+
+async function getSubscribersCount(where:any): Promise<any> {
+  return SubscriptionModel.countDocuments(where);
+}
+
 export default {
   findOneSubscription,
   createSubscription,
   updateSubscription,
   findAllSubscriptions,
+  getSubscribersByPlan,
+  getSubscribersCount
 };

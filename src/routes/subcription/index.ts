@@ -83,7 +83,7 @@ router.post(
 
     const existingSubscription = await SubscriptionRepo.findOneSubscription({
       userId,
-      status: 'active',
+      status: { $in: ["active", "trial"] },
       planId,
     });
     if (existingSubscription)
@@ -122,6 +122,20 @@ router.post(
         paymentMethodId,
       });
       if (transaction.status === 'succeeded') {
+        const currentSubscription = await SubscriptionRepo.findOneSubscription({userId,  status: { $in: ["active", "trial"] }})
+
+        if(currentSubscription){
+          await SubscriptionRepo.updateSubscription(
+            { _id: currentSubscription._id },
+            { 
+              $set: { 
+                status: 'canceled',
+                canceledAt: new Date(),
+                cancelReason: 'plan_changed'
+              } 
+            }
+          );
+        }
         await SubscriptionRepo.updateSubscription(
           { _id: subscription._id },
           {
@@ -131,6 +145,7 @@ router.post(
             },
           },
         );
+    
       } else {
         await SubscriptionRepo.updateSubscription(
           { _id: subscription._id },
@@ -221,6 +236,20 @@ router.post(
         currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
       } else if (plan.billingCycle === 'yearly') {
         currentPeriodEnd.setFullYear(currentPeriodEnd.getFullYear() + 1);
+      }
+      const currentSubscription = await SubscriptionRepo.findOneSubscription({userId,  status: { $in: ["active", "trial"] }})
+
+      if(currentSubscription){
+        await SubscriptionRepo.updateSubscription(
+          { _id: currentSubscription._id },
+          { 
+            $set: { 
+              status: 'canceled',
+              canceledAt: new Date(),
+              cancelReason: 'plan_changed'
+            } 
+          }
+        );
       }
       await SubscriptionRepo.updateSubscription(
         { _id: subscription._id },

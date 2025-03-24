@@ -12,8 +12,27 @@ async function findAllTransactions(where: any): Promise<Transaction[] | [] | nul
   return TransactionModel.find(where).sort({ isDefault: -1, createdAt: -1 }).lean().exec();
 }
 
+async function getRevenueMetrics(where:any):Promise<any> {
+  const result = await TransactionModel.aggregate([
+    {
+      $match: where
+    },
+    {
+      $group: {
+        _id: '$currency',
+        amount: { $sum: '$amount' },
+        count: { $sum: 1 }
+      }
+    }
+  ]);
+  
+
+  return result
+}
+getRevenueMetrics({})
 export default {
   findOneTransaction,
   createTransaction,
-  findAllTransactions
+  findAllTransactions,
+  getRevenueMetrics
 };

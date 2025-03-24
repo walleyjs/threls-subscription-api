@@ -16,12 +16,11 @@ router.use(authentication);
 router.get(
   '/',
   asyncHandler(async (req: ProtectedRequest, res) => {
-   
     const { _id: userId } = req.user;
     const paymentMethods = await PaymentMethodRepo.findAllPaymentMethods({
       userId,
     });
-   
+
     new SuccessResponse('success', {
       data: paymentMethods,
     }).send(res);
@@ -40,7 +39,7 @@ router.post(
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth() + 1;
 
-      details.last4= details.cardNumber.slice(-4);
+      details.last4 = details.cardNumber.slice(-4);
 
       if (
         details.expiryYear < currentYear ||
@@ -58,7 +57,10 @@ router.post(
       );
     }
 
-    const paymentMethod = await PaymentMethodRepo.createPaymentMethod({...req.body, userId});
+    const paymentMethod = await PaymentMethodRepo.createPaymentMethod({
+      ...req.body,
+      userId,
+    });
     Logger.info(`Payment method created for user ${userId}`);
 
     new SuccessResponse('success', {
@@ -136,9 +138,8 @@ router.put(
 
 router.put(
   '/delete/:id',
-  
+
   asyncHandler(async (req: ProtectedRequest, res) => {
-   
     const { _id: userId } = req.user;
     const { id } = req.params;
 
@@ -149,7 +150,24 @@ router.put(
 
     if (!paymentMethod) throw new BadRequestError('Payment method not found');
 
-   const deleted = await PaymentMethodRepo.deletePaymentMethod(id);
+    const deleted = await PaymentMethodRepo.deletePaymentMethod(id);
+
+    if (paymentMethod.isDefault) {
+      const anotherPaymentMethod = await PaymentMethodRepo.findOnePaymentMethod(
+        { userId },
+      );
+      if (anotherPaymentMethod) {
+        anotherPaymentMethod.isDefault = true;
+        await PaymentMethodRepo.updatePaymentMethod(
+          { _id: anotherPaymentMethod._id },
+          {
+            $set: {
+              isDefault: true,
+            },
+          },
+        );
+      }
+    }
 
     new SuccessResponse('success', {
       data: deleted,
@@ -160,18 +178,16 @@ router.put(
 router.get(
   '/default',
   asyncHandler(async (req: ProtectedRequest, res) => {
-   
     const { _id: userId } = req.user;
     let paymentMethod = await PaymentMethodRepo.findOnePaymentMethod({
       userId,
-      isDefault: true
+      isDefault: true,
     });
 
     if (!paymentMethod) {
-      paymentMethod = await PaymentMethodRepo.findOnePaymentMethod({ userId })
-      
+      paymentMethod = await PaymentMethodRepo.findOnePaymentMethod({ userId });
     }
-   
+
     new SuccessResponse('success', {
       data: paymentMethod,
     }).send(res);

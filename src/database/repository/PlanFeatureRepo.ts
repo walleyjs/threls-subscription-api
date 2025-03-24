@@ -16,7 +16,14 @@ async function findPlanFeature(where:any): Promise<PlanFeature[]> {
     return plan
 }
 
+async function updatePlanFeature(where: any, set: any, option:any): Promise<boolean> {
+  await PlanFeatureModel.updateMany(where, set,option);
+
+  return true;
+}
+
 export default {
   findPlanFeatureById,
-  findPlanFeature
+  findPlanFeature,
+  updatePlanFeature
 }

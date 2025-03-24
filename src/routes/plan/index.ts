@@ -46,8 +46,6 @@ router.get(
       monthly: plansWithFeatures.filter(plan => plan.billingCycle === 'monthly'),
       yearly: plansWithFeatures.filter(plan => plan.billingCycle === 'yearly')
     };
-    
-    // return groupedPlans;
 
     new SuccessResponse('success', {
       data: groupedPlans,

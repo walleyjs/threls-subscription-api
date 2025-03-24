@@ -33,6 +33,15 @@ const schema = new Schema<Webhook>(
     },
     events: {
       type: [Schema.Types.String],
+      enum: [
+        'subscription.created',
+        'subscription.updated',
+        'subscription.canceled',
+        'subscription.renewed',
+        'payment.succeeded',
+        'payment.failed',
+        'payment.refunded'
+      ],
       required: true,
     },
     isActive: {

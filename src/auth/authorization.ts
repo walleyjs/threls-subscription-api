@@ -8,7 +8,7 @@ const router = express.Router();
 
 export default router.use(
   asyncHandler(async (req: ProtectedRequest, res, next) => {
-    if (!req.user || !req.user.role || !req.currentRoleCode)
+    if (!req.user || !req.user.role)
       throw new AuthFailureError('Permission denied');
 
     let authorized = false;

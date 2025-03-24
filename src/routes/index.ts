@@ -8,7 +8,9 @@ import paymethod from './subcription/paymentMethod';
 import subscription from './subcription'
 import profile from './profile';
 import plan from './plan';
-import Transaction from './subcription/transaction'
+import Transaction from './subcription/transaction';
+import Admin from './admin'
+import Webhook from './webhook'
 
 const router = express.Router();
 
@@ -30,5 +32,7 @@ router.use('/plan', plan);
 router.use('/subscription', subscription);
 router.use('/payment-method', paymethod);
 router.use('/transaction', Transaction);
+router.use('/admin', Admin);
+router.use('/webhook', Webhook);
 
 export default router;
