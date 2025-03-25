@@ -2,6 +2,7 @@ import { connection } from '../index';
 import Logger from '../../core/Logger';
 import { seedFeatures } from './feature.seeder';
 import { seedPlans } from './plan.seeder';
+import { seedAdminUser } from './admin.seeder';
 
 
 async function runSeeders() {
@@ -15,7 +16,7 @@ async function runSeeders() {
     }
 
     Logger.info('Starting to seed database...');
-    
+    await seedAdminUser()
     await seedFeatures();
     await seedPlans();
 
