@@ -95,6 +95,12 @@ async function updateInfo(user: User): Promise<any> {
     .exec();
 }
 
+async function findUser(where:any): Promise<User[] | null> {
+  return UserModel.find(where).lean()
+  .exec();
+  
+}
+
 export default {
   exists,
   findPrivateProfileById,
@@ -105,4 +111,5 @@ export default {
   create,
   update,
   updateInfo,
+  findUser
 };

@@ -3,6 +3,10 @@ import Subscription, { SubscriptionModel } from '../model/Subscription';
 async function findOneSubscription(where: any): Promise<Subscription | null> {
   return SubscriptionModel.findOne(where).populate([{
     path:"planId"
+  },  {
+    path: 'userId',
+  },  {
+    path: 'lastTransactionId',
   }]).lean().exec();
 }
 

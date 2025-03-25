@@ -12,6 +12,7 @@ import FeatureRepo from '../../database/repository/FeatureRepo';
 import { BadRequestError } from '../../core/ApiError';
 import PlanFeatureRepo from '../../database/repository/PlanFeatureRepo';
 import mongoose from 'mongoose';
+import UserRepo from '../../database/repository/UserRepo';
 
 
 const router = express.Router();
@@ -22,7 +23,7 @@ router.get(
   '/subscribers',
   asyncHandler(async (req: ProtectedRequest, res) => {
   
-      const subscriptions = await SubscriptionRepo.findAllSubscriptions({  status: { $in: ["active", "trial"] } });
+      const subscriptions = await SubscriptionRepo.findAllSubscriptions({}) ;
   
       new SuccessResponse('success', {
         data: subscriptions,
@@ -246,6 +247,103 @@ router.put(
     }).send(res);
   }),
 );
+
+router.get(
+  '/subscribers/:id',
+  asyncHandler(async (req: ProtectedRequest, res) => {
+    const {id} = req.params;
+      const subscription = await SubscriptionRepo.findOneSubscription({_id:id}) ;
+  
+      new SuccessResponse('success', {
+        data: subscription,
+      }).send(res);
+    }),
+);
+
+
+router.get(
+  '/transactions',
+  asyncHandler(async (req: ProtectedRequest, res) => {
+    const {
+      status,
+      search,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+    
+   
+    const filter: any = {};
+    if (status && status !== 'all') {
+      filter.status = status;
+    }
+
+    if (search) {
+    
+      let userIds: string[] = [];
+      if (typeof search === 'string' && search.trim()) {
+        const searchRegex = new RegExp(search, 'i');
+        const users = await UserRepo.findUser({
+          $or: [
+            { email: searchRegex },
+            { firstName: searchRegex },
+            { lastName: searchRegex }
+          ]
+        })
+
+        if(!users) return;
+        userIds = users.map(user => user._id.toString());
+      }
+      
+    
+      filter.$or = [
+        { invoiceNumber: typeof search === 'string' ? new RegExp(search, 'i') : search },
+        { providerTransactionId: typeof search === 'string' ? new RegExp(search, 'i') : search },
+        ...(userIds.length > 0 ? [{ userId: { $in: userIds } }] : [])
+      ];
+    }
+    
+
+    const pageNum = parseInt(page as string, 10) || 1;
+    const limitNum = parseInt(limit as string, 10) || 10;
+    const skip = (pageNum - 1) * limitNum;
+    
+
+    const sortOptions: any = {};
+    sortOptions[sortBy as string] = sortOrder === 'asc' ? 1 : -1;
+
+    const transactions = await TransactionRepo.findAllTransactionsAdmin(filter,sortOptions, skip, limitNum)
+    const totalCount = await TransactionRepo.transactionCount(filter)
+  
+      new SuccessResponse('success', {
+        data: { transactions,
+          pagination: {
+            total: totalCount,
+            page: pageNum,
+            limit: limitNum,
+            pages: Math.ceil(totalCount / limitNum)
+          }},
+      }).send(res);
+    }),
+);
+router.get(
+  '/transactions/:id',
+  asyncHandler(async (req: ProtectedRequest, res) => {
+   
+   
+    const { id } = req.params;
+    const paymentMethods = await TransactionRepo.findOneTransaction({
+     
+      _id:id
+    });
+   
+    new SuccessResponse('success', {
+      data: paymentMethods,
+    }).send(res);
+  }),
+);
+
 
 
 export default router;
