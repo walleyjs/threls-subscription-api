@@ -21,12 +21,7 @@
     * Make a copy of **.env.example** file to **.env**.
     * Make a copy of **keys/private.pem.example** file to **keys/private.pem**.
     * Make a copy of **keys/public.pem.example** file to **keys/public.pem**.
-    * Make a copy of **tests/.env.test.example** file to **tests/.env.test**.
-    * Change the `DB_HOST` to `localhost` in **.env** and **tests/.env.test** files.
+    * Add your mongdb connection url to `DATABSE_CONNECTION_URL` in  **.env**.
+    * Change the `DB_HOST` to `localhost` in **.env** file if you are using a local mongodb.
+    * Execute `npm run seed` to run script that will create super admin, featears and plans data.
     * Execute `npm dev` and You will be able to access the API from http://localhost:3000
-    * To run the tests execute `npm test`.
-* Run The Tests
-    * Install node.js and npm on your local machine.
-    * From the root of the project executes in terminal `npm install`.
-    * *Use the latest version of node on the local machine if the build fails*.
-    * To run the tests execute `npm test`.

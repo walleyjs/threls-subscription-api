@@ -16,7 +16,6 @@
     "eslint": "eslint . --ext .js,.ts",
     "upgrade": "npm update --save-dev && npm update --save",
     "upgrade-latest": "npx npm-check-updates -u && npm install",
-    "test": "jest --forceExit --detectOpenHandles --coverage --verbose",
     "seed": "ts-node -r dotenv/config src/database/seeders/index.ts",
     "seed:admin": "ts-node -r dotenv/config src/database/seeders/admin.seeder.ts",
     "seed:features": "ts-node -r dotenv/config src/database/seeders/feature.seeder.ts",
